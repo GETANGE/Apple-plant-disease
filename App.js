@@ -2,24 +2,25 @@ const express = require('express');
 const morgan = require('morgan');
 const app = express();
 
-// import route modules 
+// Import route modules
 const diseaseRoute = require('./routes/diseaseRoute');
-const userRoute = require('./routes/userRoute'); 
+const userRoute = require('./routes/userRoute');
 
-// Use Morgan middleware 
+// Use Morgan middleware
 app.use(morgan('dev'));
+app.use(express.json());
 
-// disease and user endpoint
-app.use('api/v1/disease', diseaseRoute);
-app.use('api/v1/user', userRoute);
+// Disease and user endpoints
+app.use('/api/v1/disease', diseaseRoute);
+// app.use('/api/v1/user', userRoute);
 
-// error handling undefined routes
+// Error handling for undefined routes
 app.use('*', (req, res, next) => {
     res.status(404).json({
-        status: 'success',
+        status: 'error',
         message: 'This route does not exist'
     });
     next();
 });
 
-module.exports = app
+module.exports = app;

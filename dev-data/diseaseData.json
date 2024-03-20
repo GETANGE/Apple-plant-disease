@@ -1,0 +1,50 @@
+
+ [
+      {
+        "name": "Apple Cedar Apple Rust",
+        "images":[
+            "images/apple1",
+            "images/apple2",
+            "images/apple3"
+        ],
+        "description": "Apple Cedar Apple Rust is a fungal disease that affects apple trees, caused by the pathogen Gymnosporangium juniperi-virginianae. It typically appears as orange or rust-colored spots on the leaves, fruit, and twigs of apple trees.",
+        "symptoms": [
+          "Orange or rust-colored spots on leaves, fruit, and twigs",
+          "Yellowing and premature dropping of leaves",
+          "Deformed or stunted fruit"
+        ],
+        "treatment": "Treatment involves pruning infected branches, applying fungicides, and removing nearby juniper plants which serve as alternate hosts for the pathogen."
+      },
+      {
+        "name": "Apple Black Rot",
+        "images":[
+            "images/apple4",
+            "images/apple5",
+            "images/apple6"
+        ],
+        "description": "Apple Black Rot is a fungal disease caused by the pathogen Botryosphaeria obtusa. It affects apple trees and causes dark, sunken lesions on fruit, leaves, and twigs.",
+        "symptoms": [
+          "Dark, sunken lesions on fruit, leaves, and twigs",
+          "Fruit mummification",
+          "Leaf wilting and curling"
+        ],
+        "treatment": "Treatment involves removing infected plant parts, applying fungicides, and practicing good orchard sanitation to reduce disease spread."
+      },
+      {
+        "name": "Apple Scab",
+        "images":[
+            "images/apple7",
+            "images/apple8",
+            "images/apple9"
+        ],
+        "description": "Apple Scab is a fungal disease caused by the pathogen Venturia inaequalis. It affects apple trees and appears as olive-green to black lesions on leaves, fruit, and twigs.",
+        "symptoms": [
+          "Olive-green to black lesions on leaves, fruit, and twigs",
+          "Leaf curling and distortion",
+          "Reduced fruit quality and yield"
+        ],
+        "treatment": "Treatment involves pruning infected branches, applying fungicides, and practicing good orchard hygiene to minimize disease spread."
+      }
+    ]
+
+  
