@@ -7,7 +7,10 @@ const diseaseRoute = require('./routes/diseaseRoute');
 const userRoute = require('./routes/userRoute');
 
 // Use Morgan middleware
-app.use(morgan('dev'));
+if(process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'development'){
+    app.use(morgan('dev'));
+}
+
 app.use(express.json());
 
 // Disease and user endpoints
