@@ -26,7 +26,7 @@ app.use('/api/v1/disease', diseaseRoute);
 
 // Error handling for undefined routes
 app.use('*', (req, res, next) => {
-    return next(new AppError(`This ${req.originalUrl}route is not defined`, 500));
+    return next(new AppError(`This ${req.originalUrl}  route is not defined`, 500));
 });
 
 // global error handling
