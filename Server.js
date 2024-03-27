@@ -15,21 +15,20 @@ mongoose.connect(process.env.DATABASE_URL).then(() => {
 });
 
 // Create a Redis client
-const client = createClient({
-    host: 'redis-13393.c274.us-east-1-3.ec2.cloud.redislabs.com',
-    port: 13393,
-    password: 'pkajlxlgCUq9WypiNGVmbDTRalEBAGPG'
-});
-
-client.on('connect', () => {
+exports.redisClient = createClient({
+    host: process.env.REDIS_HOST,
+    port: process.env.REDIS_PORT,
+    // password:process.env.REDIS_PASSWORD
+}).on('connect', () => {
     console.log('Connected to Redis 🎉');
-});
-
-client.on('error', (err) => {
+}).on('error', (err) => {
     console.log('Error connecting to Redis', err);
-});
+}).connect();
+
+
 
 // Start the Express server
 app.listen(port, () => {
     console.log(`Server running on port: ${port}`);
 });
+
