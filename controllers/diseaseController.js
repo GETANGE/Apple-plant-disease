@@ -8,9 +8,9 @@ dotenv.config({ path: "./config.env" });
 
 //Create and configure the Redis client
 const redisClient = new Redis({
-    host: 'redis-13393.c274.us-east-1-3.ec2.cloud.redislabs.com',
-    port: 13393, 
-    password: 'pkajlxlgCUq9WypiNGVmbDTRalEBAGPG',
+    host: process.env.REDIS_HOST,
+    port: process.env.REDIS_PORT, 
+    password: process.env.REDIS_PASSWORD,
 }).on('connect', () => {
     console.log('Connected to Redis 💯');
 }).on ('disconnect', () =>{
@@ -19,7 +19,8 @@ const redisClient = new Redis({
 
 
 exports.getAllDiseases = async (req, res, next) => {
-    try {
+
+    try{
         const key = 'diseases';
         let diseases;
 
@@ -50,13 +51,8 @@ exports.getAllDiseases = async (req, res, next) => {
                 }
             });
         }
-    } catch (error) {
-        console.error("Error:", error);
-        // Handle errors
-        res.status(500).json({
-            status: 'error',
-            message: 'Internal server error'
-        });
+    }catch(error){
+        return next(new AppError('Internal Server Error', 500));
     }
 };
 
