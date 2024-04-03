@@ -21,15 +21,13 @@ const redisClient = new Redis({
 exports.getAllDiseases = async (req, res, next) => {
 
     try{
-        const key = 'diseases';
-        let diseases;
-
         // Attempt to fetch data from the cache
-        let cachedData = await redisClient.get(key);
+        let cachedData = await redisClient.get('diseases');
 
         if (cachedData) {
             // Data found in cache, parse and send it in the response
             const parsedData = JSON.parse(cachedData);
+            
             res.status(200).json({
                 status: 'success',
                 data: {
@@ -38,10 +36,10 @@ exports.getAllDiseases = async (req, res, next) => {
             });
         } else {
             // Data not found in cache, fetch it from the database
-            diseases = await Disease.find();
+            let diseases = await Disease.find();
 
             // Cache the fetched data for future requests
-            await redisClient.setex(key, 86400, JSON.stringify(diseases));
+            await redisClient.setex('diseases', 86400, JSON.stringify(diseases));
 
             // Return the fetched data in the response
             res.status(200).json({
