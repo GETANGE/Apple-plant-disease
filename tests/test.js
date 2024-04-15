@@ -8,7 +8,7 @@ describe('insert', function () {
     let db;
 
     beforeAll(async function() {
-        connection = await MongoClient.connect(process.env.DATABASE_URL);
+        connection = await MongoClient.connect("mongodb+srv://Getange:zaki6971@apple-plant-disease-cla.ujldn5o.mongodb.net/Disease?retryWrites=true&w=majority&appName=apple-plant-disease-classification");
         db = connection.db('Disease');
     });
 
