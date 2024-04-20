@@ -6,8 +6,8 @@ const dotenv = require('dotenv');
 dotenv.config({path: "./config.env" })
 
 // Import route modules
-const diseaseRoute = require('./routes/diseaseRoute');
-const userRoute = require('./routes/userRoute');
+const diseaseRouter = require('./routes/diseaseRoute');
+const userRouter = require('./routes/userRoute');
 
 // error handling
 const ErrorHandler = require("./controllers/errorController");
@@ -21,8 +21,8 @@ if(process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'developmen
 app.use(express.json());
 
 // Disease and user endpoints
-app.use('/api/v1/disease', diseaseRoute);
-// app.use('/api/v1/user', userRoute);
+app.use('/api/v1/disease', diseaseRouter);
+app.use('/api/v1/user', userRouter);
 
 // Error handling for undefined routes
 app.use('*', (req, res, next) => {
