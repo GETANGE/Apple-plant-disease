@@ -70,7 +70,7 @@ usersSchema.pre('save', function(next){
 // (correctPassword)=> instance methods
 usersSchema.methods.correctPassword = async function (candidatePassword, userPassword) {
     return await bcrypt.compare(candidatePassword, userPassword);
-}
+} 
 
 // (changedPasswordAfter)=> instance methods
 usersSchema.methods.changedPasswordAfter = function (JWTTimestamp) {

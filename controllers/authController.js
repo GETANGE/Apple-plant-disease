@@ -4,6 +4,7 @@ const {promisify} = require('util')
 const dotenv = require('dotenv')
 const AppError = require('../utils/AppError')
 const sendMail = require('../utils/email')
+const crypto = require('crypto')
 
 dotenv.config({ path: "./config.env"})
 
@@ -25,78 +26,89 @@ exports.signup = async function (req, res, next){
             }
         })
     }catch(err){
-        next(new AppError('This user already exists', 500))
+        return next(new AppError('This user already exists', 500))
     }
 }
 
 //logging in a user
 exports.loginUsers = async function (req, res, next) {
-    try{
-        const {email, password} = req.body;
+    try {
+        const { email, password } = req.body;
 
         // check if email and password exist
-        if(!email || !password) {
+        if (!email || !password) {
             return next(new AppError('Please enter a valid email and password', 400));
         }
-    
+
         // check if user exists
-        const user = await User.findOne({email:email}).select('+password');
-        // check if the email and password exist
-        const correct = await user.correctPassword(password, user.password)
-        if(!user || !correct) {
-            return next(new AppError('Incorrect Email or Password', 400));
+        const user = await User.findOne({ email: email }).select('+password');
+        
+        // check if user exists
+        if (!user) {
+            return next(new AppError('Incorrect Email or Password', 401));
         }
-    
-        // if correct send  token to client.
-        const token = jwt.sign({_id: user._id}, process.env.JWT_SECRET,
-            {
-                expiresIn: process.env.JWT_EXPIRES_IN
-            })
-    
+
+        // check if the email and password are correct
+        const correct = await user.correctPassword(password, user.password);
+        if (!correct) {
+            return next(new AppError('Incorrect Email or Password', 401));
+        }
+
+        // generate token
+        const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET, {
+            expiresIn: process.env.JWT_EXPIRES_IN
+        });
+
         res.status(200).json({
-            status:'success',
+            status: 'success',
             token,
             data: {
                 user
             }
-        })
-    }catch(err){
-        console.log('Error'+ err)
+        });
+    } catch (err) {
+        console.log('Error' + err);
+        next(err); // Pass the error to the error handling middleware
     }
-}
+};
 
 // protecting routes
-exports.protect  = async function(req, res, next) {
-    try{
-        // get token and check if it exists
-        let token ;
-        if(req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
+exports.protect = async function(req, res, next) {
+    try {
+        // Get token from headers
+        let token;
+        if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
             token = req.headers.authorization.split(' ')[1];
         }
 
-        if(!token) {
-            return next(new AppError('You are not logged in! please log in to access services', 401))
-        }
-        // verify the token
-        const decode = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
-        // check if the user exists
-        const currentUser = await User.findById(decode.id);
-
-        if(!currentUser){
-            return next(new AppError('The user belonging to this token does not exist', 401))
+        if (!token) {
+            return next(new AppError('You are not logged in! Please log in to access services', 401));
         }
 
-        // check if the user changed password after the token was issued
-        if(currentUser.changedPasswordAfter(decode.iat)) {
-            return next(new AppError('The user recently changed the password!. Please login again', 401))
+        // Verify the token
+        const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
+
+        // Check if the user exists
+        const currentUser = await User.findById(decoded._id); // Use _id from decoded token
+
+        if (!currentUser) {
+            return next(new AppError('The user belonging to this token does not exist', 401));
         }
 
+        // Check if the user changed password after the token was issued
+        if (currentUser.changedPasswordAfter(decoded.iat)) {
+            return next(new AppError('The user recently changed the password! Please log in again', 401));
+        }
+
+        // Attach the user object to the request for further use
         req.currentUser = currentUser;
         next();
-    }catch(err){
-        console.log("The error is :"+err);
-        }
-}
+    } catch (err) {
+        console.log("The error is: " + err);
+        next(err); // Pass the error to the error handling middleware
+    }
+};
+
 
 // authorization of roles.
 exports.restrictTo = function(...roles) {
@@ -154,41 +166,49 @@ exports.forgotPassword = async function(req, res, next) {
 }
 
 // resetting password
+// resetting password
 exports.resetPassword = async function(req, res, next) {
-    try{
-        // get user based on the token
+    try {
+        // Get user based on the token
         const hashedToken = crypto.createHash('sha256').update(req.params.token).digest('hex');
-
         const user = await User.findOne({
             passwordResetToken: hashedToken,
-            passwordResetExpires: {$gt: Date.now()}
-        })
+            passwordResetExpires: { $gt: Date.now() }
+        });
 
-        if(!user) {
+        // Check if the user exists and token is valid
+        if (!user) {
             return next(new AppError('Token is invalid or has expired', 400));
-        }else{
-            user.password = req.body.password;
-            user.passwordConfirm = req.body.passwordConfirm;
-            user.passwordResetExpires = undefined;
-            user.passwordResetToken = undefined;
-
-            await user.save();
         }
 
-        // log in the user
-        const token = jwt.sign({id: user.id}, process.env.JWT_SECRET, {
+        // Check if password and passwordConfirm match
+        if (req.body.password !== req.body.passwordConfirm) {
+            return next(new AppError('Password and password confirmation do not match', 400));
+        }
+
+        // Update user's password and clear reset token and expiry
+        user.password = req.body.password;
+        user.passwordConfirm = req.body.passwordConfirm;
+        user.passwordResetExpires = undefined;
+        user.passwordResetToken = undefined;
+        await user.save();
+
+        // Generate JWT token for the user
+        const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, {
             expiresIn: process.env.JWT_EXPIRES_IN
         });
 
+        // Send success response with the new token and user data
         res.status(200).json({
-            status:'success',
+            status: 'success',
             token,
             data: {
                 user
             }
-        })
-    }catch(err){
-        console.log(err);
-        return next(new AppError('Error resetting password', 500));
+        });
+    } catch (err) {
+        // Handle any errors during the password reset process
+        console.error(err);
+        next(new AppError('Error resetting password. Please try again later.', 500)); // Don't return here
     }
-} 
+};

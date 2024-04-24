@@ -15,7 +15,7 @@ router.patch('/resetPassword/:token', authController.resetPassword); // will rec
 // multiple routes for Users.
 router
     .route('/')
-    .get(userController.getAllUsers, authController.protect) 
+    .get(authController.protect,userController.getAllUsers) 
     .post(userController.createUser)
 router
     .route('/:id')

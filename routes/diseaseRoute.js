@@ -7,7 +7,7 @@ const router = express.Router();
 
 router
     .route("/")
-    .get(diseaseController.getAllDiseases)
+    .get(authController.protect,diseaseController.getAllDiseases)
     .post(diseaseController.createDisease);
 
 router
