@@ -212,3 +212,39 @@ exports.resetPassword = async function(req, res, next) {
         next(new AppError('Error resetting password. Please try again later.', 500)); // Don't return here
     }
 };
+
+// updating password
+exports.updatePassword = async function(req, res, next) {
+    try {
+        // 1) Get user from collection
+        const user = await User.findOne({ id: req.body.id }).select('+password');
+
+        // 2) Check if the user exists and the password is correct
+        if (!user || !(await user.correctPassword(req.body.passwordCurrent, user.password))) {
+            return next(new AppError('Your current password is wrong', 401));
+        }
+
+        // 3) Update the password and passwordConfirm fields
+        user.password = req.body.password;
+        user.passwordConfirm = req.body.passwordConfirm;
+        await user.save();
+
+        // 4) Generate JWT token
+        const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+            expiresIn: process.env.JWT_EXPIRES_IN
+        });
+
+        // 5) Send success response with token and user data
+        res.status(200).json({
+            status: 'success',
+            token,
+            data: {
+                user
+            }
+        });
+    } catch(err) {
+        console.error(err);
+        // 6) Handle any errors during password update
+        next(new AppError('Error updating password. Please try again later.', 500));
+    }
+}

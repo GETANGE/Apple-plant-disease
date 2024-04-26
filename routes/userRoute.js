@@ -9,7 +9,7 @@ router.post('/login', authController.loginUsers);
 
 router.post('/forgotPassword', authController.forgotPassword); // will receive the email address
 router.patch('/resetPassword/:token', authController.resetPassword); // will receive the token as well the new password
-// router.patch('/updateMyPassword', authController.protect, authController.updatepassword); // will receive the
+router.patch('/updateMyPassword', authController.protect, authController.updatePassword); // will receive the
 // router.patch('/updateMe', authController.protect, userController.updateMe); // will receive the
 
 // multiple routes for Users.
