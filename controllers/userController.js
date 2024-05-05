@@ -44,9 +44,18 @@ exports.updateUser=function(req, res) {
     });
 }
 
-exports.deleteUser=function(req, res) {
-    res.status(500).json({
-        status: 'Error',
-        message: 'This route is not yet defined'
-    });
+exports.deleteMe = async function(req, res, next) {
+    try{
+        const user = await User.findByIdAndDelete(req.params.id);
+        if(!user){
+            return next(new AppError('User not found', 404));
+        }else{
+            res.status(204).json({
+                status: 'Success',
+                data: null
+            });
+        }
+    }catch(err){
+        next(err);
+    }
 }

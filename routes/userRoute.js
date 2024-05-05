@@ -10,7 +10,7 @@ router.post('/login', authController.loginUsers);
 router.post('/forgotPassword', authController.forgotPassword); // will receive the email address
 router.patch('/resetPassword/:token', authController.resetPassword); // will receive the token as well the new password
 router.patch('/updateMyPassword', authController.protect, authController.updatePassword); // will receive the
-// router.patch('/updateMe', authController.protect, userController.updateMe); // will receive the
+router.delete('/deleteMe', authController.protect, userController.deleteMe); // will receive the
 
 // multiple routes for Users.
 router
@@ -21,6 +21,5 @@ router
     .route('/:id')
     .get(userController.getUser)
     .patch(userController.updateUser)
-    .delete(userController.deleteUser) 
 
 module.exports = router;
