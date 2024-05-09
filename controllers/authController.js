@@ -22,6 +22,7 @@ exports.signup = async function (req, res, next){
             status:'success',
             token,
             data: {
+                token,
                 user: newUser,
             }
         })
@@ -63,6 +64,7 @@ exports.loginUsers = async function (req, res, next) {
             status: 'success',
             token,
             data: {
+                token,
                 user
             }
         });
