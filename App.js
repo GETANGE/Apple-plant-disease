@@ -2,6 +2,7 @@ const express = require('express');
 const morgan = require('morgan');
 const app = express();
 const dotenv = require('dotenv');
+const cors = require('cors');
 
 dotenv.config({ path: "./config.env" });
 
@@ -19,6 +20,9 @@ if (process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'developme
 }
 
 app.use(express.json());
+// Enable CORS middleware
+app.use(cors());
+
 app.use(function(req, res, next) {
     console.log(req.headers);
     next();
