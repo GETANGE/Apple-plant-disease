@@ -1,5 +1,5 @@
 
- [
+[
       {
         "name": "Apple Cedar Apple Rust",
         "images":[
@@ -43,7 +43,18 @@
           "Leaf curling and distortion",
           "Reduced fruit quality and yield"
         ],
-        "treatment": "Treatment involves pruning infected branches, applying fungicides, and practicing good orchard hygiene to minimize disease spread."
+        "treatment": [
+          "Remove and destroy infected plant parts, such as leaves and twigs, to prevent the spread of Apple scab.",
+          "Apply fungicides at the appropriate times, following label instructions carefully to effectively control the disease.",
+          "Practice good orchard sanitation by regularly cleaning up fallen leaves, fruit, and other debris that can harbor the pathogen.",
+          "Plant disease-resistant apple varieties to reduce the likelihood of Apple scab infections and minimize the need for chemical treatments.",
+          "Apply sulfur or lime-sulfur sprays during the early stages of tree growth to protect against Apple scab spores.",
+          "Use horticultural oils during dormant seasons to control overwintering Apple scab spores and reduce early season infections.",
+          "Ensure proper tree spacing to promote good air circulation, which helps to keep the foliage dry and less conducive to fungal growth.",
+          "Regularly monitor your apple trees for signs of Apple scab, such as lesions on leaves and fruit, and take immediate action if symptoms are detected.",
+          "Implement a proper pruning schedule to maintain tree health, improve sunlight penetration, and increase airflow, reducing the chances of infection.",
+          "Clean up and dispose of fallen leaves and fruit at the end of the growing season to eliminate sources of Apple scab inoculum for the next season."
+        ]
       }
     ]
 

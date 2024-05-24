@@ -16,11 +16,7 @@ const diseaseSchema = new Schema({
         unique: true
     },
     symptoms:[String],
-    treatment:{
-        type: String,
-        required: true,
-        unique: true
-    }
+    treatment:[String]
 });
 
 // create a model object
