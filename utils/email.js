@@ -11,14 +11,17 @@ const sendMail = async function(options){
         port: 456,
         secure: true,
         auth: {
-            user: 'emmanuelgetange48@gmail.com',
-            pass: 'innczeugrmbkvneu'
+            user: process.env.GMAIL_USER,
+            pass: process.env.GMAIL_PASS
         },
     });
 
     // define the email option
     const mailOptions = {
-        from: 'emmanuelgetange48@gmail.com',
+        from: {
+            name: 'Apple-ScaB Classifier',
+            address: process.env.GMAIL_USER,
+        },
         to: options.email,
         subject: options.subject,
         text: options.message
