@@ -6,17 +6,19 @@ dotenv.config({path: "../config.env"})
 const sendMail = async function(options){
 
     const transporter = nodemailer.createTransport({
-        host: 'sandbox.smtp.mailtrap.io',
-        port: 2525,
+        service: 'gmail',
+        host: 'smtp.gmail.com',
+        port: 456,
+        secure: true,
         auth: {
-            user: process.env.MAILTRAP_USER,
-            pass: process.env.MAILTRAP_PASS
-        }
+            user: 'emmanuelgetange48@gmail.com',
+            pass: 'innczeugrmbkvneu'
+        },
     });
 
     // define the email option
     const mailOptions = {
-        from: 'Scab-Classifier <scab-classifier@gmail.com>',
+        from: 'emmanuelgetange48@gmail.com',
         to: options.email,
         subject: options.subject,
         text: options.message
