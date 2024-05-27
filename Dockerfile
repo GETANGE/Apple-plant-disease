@@ -25,7 +25,7 @@ WORKDIR /app
 COPY package*.json ./  
 COPY . .  
 
-RUN pnpm install  
+RUN npm install  
 
 # Create a slimmer production image
 FROM node:20-alpine AS runner
@@ -37,4 +37,4 @@ COPY --from=builder /app /app
 EXPOSE 3000
 
 # Start the application using pnpm
-CMD ["pnpm", "start"]
+CMD ["npm", "start"]
