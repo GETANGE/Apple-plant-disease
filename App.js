@@ -32,6 +32,12 @@ app.use(function(req, res, next) {
 app.use('/api/v1/disease', diseaseRouter);
 app.use('/api/v1/user', userRouter);
 
+app.get('/',(req, res)=>{
+    res.json({
+        message: 'Disease'
+    })
+})
+
 // Error handling for undefined routes
 app.use('*', (req, res, next) => {
     next(new AppError(`This ${req.originalUrl} route is not defined`, 404)); // Use 404 status code for undefined routes
