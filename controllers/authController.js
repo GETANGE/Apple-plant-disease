@@ -1,10 +1,11 @@
-const User = require('../models/userModel')
-const jwt = require('jsonwebtoken')
-const {promisify} = require('util')
-const dotenv = require('dotenv')
-const AppError = require('../utils/AppError')
-const sendMail = require('../utils/email')
-const crypto = require('crypto')
+const User = require('../models/userModel');
+const jwt = require('jsonwebtoken');
+const {promisify} = require('util');
+const dotenv = require('dotenv');
+const AppError = require('../utils/AppError');
+const sendMail = require('../utils/email');
+const crypto = require('crypto');
+const sendSMS = require('../utils/sms');
 
 dotenv.config({ path: "./config.env"})
 
@@ -17,16 +18,38 @@ exports.signup = async function (req, res, next){
             {
                 expiresIn: process.env.JWT_EXPIRES_IN
             })
+
+            const message = `Hello ${newUser.name}, Welcome to the Apple-Scab classiffier App`
+
+            const company = process.env.COMPANY_NAME
+
+
+                    res.status(201).json({
+                    status:'success',
+                    token,
+                    data: {
+                        token,
+                        user: newUser,
+                    }
+                })
     
-        res.status(201).json({
-            status:'success',
-            token,
-            data: {
-                token,
-                user: newUser,
-            }
-        })
+            // try{
+            //     //await sendSMS(newUser.phoneNumber, message);
+            //     //console.log(newUser.phoneNumber,company,message)
+
+            //     res.status(201).json({
+            //         status:'success',
+            //         token,
+            //         data: {
+            //             token,
+            //             user: newUser,
+            //         }
+            //     })
+            // }catch(e){
+            //     console.log(e);
+            // }
     }catch(err){
+        console.log(err);
         return next(new AppError('This user already exists', 500))
     }
 }
