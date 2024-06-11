@@ -1,6 +1,7 @@
 const express = require('express');
 const morgan = require('morgan');
 const app = express();
+const helmet = require('helmet')
 const dotenv = require('dotenv');
 const cors = require('cors');
 
@@ -18,6 +19,8 @@ const AppError = require('./utils/AppError');
 if (process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'development') {
     app.use(morgan('dev'));
 }
+
+app.use(helmet()); // protect from web vulnerabilities
 
 app.use(express.json());
 // Enable CORS middleware
