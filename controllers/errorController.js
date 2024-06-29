@@ -73,7 +73,7 @@ const ErrorHandler = (err, req, res, next) => {
     }else if(process.env.NODE_ENV === 'development'){
         devError(err, res);
 
-        let error = {...err}
+        let error = {...err} // used to copy all the properties of the existing error
         
         if(error.name === 'CastError'){
             error = handleCastErrorDB(error)

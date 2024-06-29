@@ -162,7 +162,7 @@ exports.forgotPassword = async function(req, res, next) {
 
     const resetURL = `${req.protocol}://${req.get('host')}/api/v1/users/resetPassword/${resetToken}`
 
-    const message = `Forgot your password? Submit a your new password and confirm your new password to : ${resetURL}.\n 
+    const message = `Forgot your password? Submit  your new password and confirm your new password to : ${resetURL}.\n 
     If you did not make this request, please ignore this email and your password will remain unchanged.`
 
     try{
