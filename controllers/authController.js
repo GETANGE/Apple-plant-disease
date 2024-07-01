@@ -99,6 +99,19 @@ exports.loginUsers = async function (req, res, next) {
             expiresIn: process.env.JWT_EXPIRES_IN
         });
 
+        const cookieOptions = {
+            expires: new Date(
+                Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000,
+            ),
+            httpOnly: true, // cookie can not be altered by the browser
+        }
+
+        if(process.env.NODE_ENV === 'production') {
+            cookieOptions.secure = true
+        }
+
+        res.cookie('jwt', token, cookieOptions)
+
         res.status(200).json({
             status: 'success',
             token,
@@ -164,7 +177,9 @@ exports.restrictTo = function(...roles) {
 // Password reset functionality.
 exports.forgotPassword = async function(req, res, next) {
     // get user based on the POSTed email
-    const user = await User.findOne({email:req.body.email});
+    const email = req.body.email;
+
+    const user = await User.findOne({ email: email });
 
     if(!user) {
         return next(new AppError('No user found with that email', 404));
@@ -239,6 +254,19 @@ exports.resetPassword = async function(req, res, next) {
             expiresIn: process.env.JWT_EXPIRES_IN
         });
 
+        const cookieOptions = {
+            expires: new Date(
+                Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000,
+            ),
+            httpOnly: true, // cookie can not be altered by the browser
+        }
+
+        if(process.env.NODE_ENV === 'production') {
+            cookieOptions.secure = true
+        }
+
+        res.cookie('jwt', token, cookieOptions)
+
         // Send success response with the new token and user data
         res.status(200).json({
             status: 'success',
@@ -274,6 +302,19 @@ exports.updatePassword = async function(req, res, next) {
         const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
             expiresIn: process.env.JWT_EXPIRES_IN
         });
+
+        const cookieOptions = {
+            expires: new Date(
+                Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000,
+            ),
+            httpOnly: true, // cookie can not be altered by the browser
+        }
+
+        if(process.env.NODE_ENV === 'production') {
+            cookieOptions.secure = true
+        }
+
+        res.cookie('jwt', token, cookieOptions)
 
         // 5) Send success response with token and user data
         res.status(200).json({
