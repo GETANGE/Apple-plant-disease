@@ -31,12 +31,18 @@ app.use(cors());
 // protecting from cross-domain requests
 app.use(cookieParser());
 
-// adding rate limit to count requests coming from one Ip address.
+app.disable('x-powered-by');
+
+// Enable 'trust proxy'
+app.set('trust proxy', true);
+
+// Define rate limiter
 const rateLimiter = rateLimit({
-    windowMs: 60 * 60 * 1000, // 1 hr
-    max: 100, // limit each IP to 100 requests per windowMs
-    message: 'Too many requests from this IP, please try again later.'
-})
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 100,
+    standardHeaders: true,
+    legacyHeaders: false,
+});
 app.use('/api',rateLimiter)
 
 app.use(function(req, res, next) {
