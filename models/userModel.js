@@ -97,7 +97,7 @@ usersSchema.methods.changedPasswordAfter = function (JWTTimestamp) {
 // (createPasswordResetToken)=> instance method in MongoDB
 // N/B instance method in MongoDB => methods that can be called on individual document instances.
 usersSchema.methods.createPasswordResetToken = function(){
-    const resetToken = crypto.randomBytes(32).toString('hex'); // this token will be sent to the user.
+    const resetToken = crypto.randomBytes(8).toString('hex'); // this token will be sent to the user.
 
     this.passwordResetToken= crypto
                 .createHash('sha256')
