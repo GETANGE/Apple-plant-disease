@@ -191,8 +191,7 @@ exports.forgotPassword = async function(req, res, next) {
         validateBeforeSave: false
     })
 
-    const message = `Your password reset token is  :\n  ${resetToken}.\n 
-    If you did not make this request, please ignore this email and your password will remain unchanged.`
+    const message = `Your password reset token is:\n\n<b>${resetToken}</b>.\n\nIf you did not make this request, please ignore this email and your password will remain unchanged.`;
 
     try{
         await sendMail({
