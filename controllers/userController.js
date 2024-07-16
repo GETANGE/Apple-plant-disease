@@ -58,3 +58,25 @@ exports.deleteMe = async function (req, res, next) {
     next(err);
   }
 };
+
+// implementing soft-delete
+exports.delete = async function (req, res, next) {
+  try {
+    const { id } = req.params;
+
+    // Update the document to set the deletedAt field to the current date
+    const result = await User.findByIdAndUpdate(
+      id,
+      { deletedAt: new Date() },
+      { new: true },
+    );
+
+    if (!result) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    res.json({ message: "User soft-deleted successfully", user: result });
+  } catch (err) {
+    next(err);
+  }
+};

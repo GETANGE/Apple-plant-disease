@@ -51,6 +51,10 @@ const usersSchema = new mongoose.Schema({
   },
   passwordResetToken: String,
   passwordResetExpires: Date,
+  deletedAt: {
+    type: Date,
+    default: null,
+  },
 });
 
 usersSchema.pre("save", async function (next) {
@@ -75,6 +79,15 @@ usersSchema.pre("save", function (next) {
     this.passwordChangedAt = Date.now() - 1000;
     next();
   }
+});
+
+// performing soft-delete before perfoming any writes to the database.
+usersSchema.pre("find", function () {
+  this.where({ deletedAt: null });
+});
+
+usersSchema.pre("findOne", function () {
+  this.where({ deletedAt: null });
 });
 
 // (correctPassword)=> instance methods

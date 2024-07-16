@@ -37,31 +37,21 @@ exports.signup = async function (req, res, next) {
     const message = `Hello ${newUser.name}, Welcome to the Apple-Scab classiffier App`;
 
     const company = process.env.COMPANY_NAME;
+    try {
+      await sendSMS(newUser.phoneNumber, message);
+      console.log(newUser.phoneNumber, company, message);
 
-    res.status(201).json({
-      status: "success",
-      token,
-      data: {
+      res.status(201).json({
+        status: "success",
         token,
-        user: newUser,
-      },
-    });
-
-    // try{
-    //     //await sendSMS(newUser.phoneNumber, message);
-    //     //console.log(newUser.phoneNumber,company,message)
-
-    //     res.status(201).json({
-    //         status:'success',
-    //         token,
-    //         data: {
-    //             token,
-    //             user: newUser,
-    //         }
-    //     })
-    // }catch(e){
-    //     console.log(e);
-    // }
+        data: {
+          token,
+          user: newUser,
+        },
+      });
+    } catch (e) {
+      console.log(e);
+    }
   } catch (err) {
     console.log(err);
     return next(new AppError("This user already exists", 500));

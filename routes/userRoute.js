@@ -15,6 +15,7 @@ router.patch(
   authController.updatePassword,
 ); // will receive the
 router.delete("/deleteMe/:id", authController.protect, userController.deleteMe); // will receive the
+router.delete("/softDelete/:id", userController.delete);
 
 // multiple routes for Users.
 router
