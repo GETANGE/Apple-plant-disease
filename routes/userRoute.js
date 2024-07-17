@@ -14,8 +14,19 @@ router.patch(
   authController.protect,
   authController.updatePassword,
 ); // will receive the
-router.delete("/deleteMe/:id", authController.protect, userController.deleteMe); // will receive the
-router.delete("/softDelete/:id", userController.delete);
+router.delete(
+  "/deleteMe/:id",
+  authController.protect,
+  authController.restrictTo("admin"),
+  userController.deleteMe,
+); // will receive the
+router.delete("/softDelete/:id", authController.protect, userController.delete);
+router.patch(
+  "/reactivate/:id",
+  authController.protect,
+  authController.restrictTo("admin"),
+  userController.reactivateSoftDelete,
+);
 
 // multiple routes for Users.
 router

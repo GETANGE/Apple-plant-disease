@@ -72,10 +72,40 @@ exports.delete = async function (req, res, next) {
     );
 
     if (!result) {
-      return res.status(404).json({ error: "User not found" });
+      return next(new AppError("User not found", 404));
     }
 
-    res.json({ message: "User soft-deleted successfully", user: result });
+    res.status(200).json({
+      status: "success",
+      message: "User soft-deleted successfully",
+      user: result,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+// reactivating the soft-deleted account.
+exports.reactivateSoftDelete = async function (req, res, next) {
+  try {
+    const id = req.params.id;
+
+    // update the document to remove the deletedAt field (reactivate user)
+    const result = await User.findByIdAndUpdate(
+      id,
+      {
+        deletedAt: null,
+      },
+      {
+        new: true,
+      },
+    );
+
+    res.status(200).json({
+      status: "success",
+      message: "User re-activated successfully",
+      data: result,
+    });
   } catch (err) {
     next(err);
   }

@@ -38,8 +38,8 @@ exports.signup = async function (req, res, next) {
 
     const company = process.env.COMPANY_NAME;
     try {
-      await sendSMS(newUser.phoneNumber, message);
-      console.log(newUser.phoneNumber, company, message);
+      // await sendSMS(newUser.phoneNumber, message);
+      // console.log(newUser.phoneNumber, company, message);
 
       res.status(201).json({
         status: "success",
@@ -100,6 +100,9 @@ exports.loginUsers = async function (req, res, next) {
 
     res.cookie("jwt", token, cookieOptions);
 
+    // remove passwords from the output.
+    user.password = undefined;
+
     res.status(200).json({
       status: "success",
       token,
@@ -158,7 +161,7 @@ exports.protect = async function (req, res, next) {
     }
 
     // Attach the user object to the request for further use
-    req.currentUser = currentUser;
+    req.user = currentUser;
     next();
   } catch (err) {
     console.log("The error is: " + err);
@@ -175,6 +178,7 @@ exports.restrictTo = function (...roles) {
         new AppError("You are not authorized to perform  this action.", 403),
       );
     }
+    next();
   };
 };
 
