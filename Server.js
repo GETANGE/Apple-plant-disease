@@ -17,6 +17,6 @@ mongoose
   });
 
 // Start the Express server
-app.listen(port, () => {
-  console.log(`Server running on port: ${port}`);
+app.listen(8040, '0.0.0.0', () => {
+  console.log('Server running on port 8040');
 });
